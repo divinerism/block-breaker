@@ -12,6 +12,11 @@ const ctx = canvas.getContext("2d");
 const WIDTH = canvas.width;   // 600
 const HEIGHT = canvas.height; // 450
 
+const GameState = {
+  lives: 3,
+  isGameOver: false
+};
+
 
 // ------------------------------------------------------------
 // THE BALL
@@ -81,6 +86,10 @@ document.addEventListener("keyup", function (event) {
 // what they touched.
 // ------------------------------------------------------------
 function update() {
+  if (GameState.isGameOver) {
+    return;
+  }
+
   movePaddle();
   moveBall();
 
@@ -90,7 +99,12 @@ function update() {
 
   // The ball fell off the bottom: back to the center.
   if (ball.y > HEIGHT) {
-    resetBall();
+    GameState.lives = GameState.lives - 1;
+    if (GameState.lives === 0) {
+      GameState.isGameOver = true;
+    } else {
+      resetBall();
+    }
   }
 }
 
@@ -130,6 +144,10 @@ function draw() {
   ctx.fillRect(ball.x, ball.y, ball.width, ball.height);
 
   drawBricks();  // bricks.js
+
+  ctx.font = "16px Arial";
+  ctx.fillText("Lives: " + GameState.lives, 10, 30);
+  ctx.fillText("Game Over: " + (GameState.isGameOver ? "Yes" : "No"), WIDTH - 150, 30);
 }
 
 
