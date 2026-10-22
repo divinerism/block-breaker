@@ -85,17 +85,18 @@ document.addEventListener("keyup", function (event) {
 // UPDATE: runs 60 times every second. Move things, then check
 // what they touched.
 // ------------------------------------------------------------
+function movePaddleLeft() {
+  paddle.x = paddle.x - paddle.speed;
+}
+
+function movePaddleRight() {
+  paddle.x = paddle.x + paddle.speed;
+}
+
 function update() {
   if (GameState.isGameOver) {
     return;
   }
-function movePaddleLeft() {
-paddle.x = paddle.x - paddle.speed;
-}
-
-function movePaddleRight() {
-paddle.x = paddle.x + paddle.speed;
-}
 
   movePaddle();
   moveBall();
@@ -117,12 +118,12 @@ paddle.x = paddle.x + paddle.speed;
 
 function movePaddle() {
   if (keys["arrowleft"] || keys["a"]) {
-  movePaddleLeft();
-}
+    movePaddleLeft();
+  }
 
   if (keys["arrowright"] || keys["d"]) {
-  movePaddleRight();
-}
+    movePaddleRight();
+  }
 
   // Keep the paddle on the screen.
   if (paddle.x < 0) {
