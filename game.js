@@ -39,8 +39,15 @@ const ball = {
 function resetBall() {
   ball.x = WIDTH / 2 - ball.width / 2;
   ball.y = HEIGHT / 2 - ball.height / 2;
-  ball.vx = BALL_SPEED;  // right
-  ball.vy = BALL_SPEED;  // down
+  ball.vx = 0;
+  ball.vy = 0;
+}
+
+function launchBall() {
+  if (ball.vx === 0 && ball.vy === 0) {
+    ball.vx = BALL_SPEED;  // right
+    ball.vy = BALL_SPEED;  // down
+  }
 }
 
 
@@ -70,6 +77,10 @@ const keys = {};
 
 document.addEventListener("keydown", function (event) {
   keys[event.key.toLowerCase()] = true;
+  if (event.code === "Space") {
+    event.preventDefault();
+    launchBall();
+  }
   // Stop the arrow keys from scrolling the page.
   if (event.key.startsWith("Arrow")) {
     event.preventDefault();
