@@ -14,7 +14,8 @@ const HEIGHT = canvas.height; // 450
 
 const GameState = {
   lives: 3,
-  isGameOver: false
+  isGameOver: false,
+  isPaused: false
 };
 
 
@@ -77,6 +78,15 @@ const keys = {};
 
 document.addEventListener("keydown", function (event) {
   keys[event.key.toLowerCase()] = true;
+  if (event.key.toLowerCase() === "shift") {
+    speedBoost();
+  }
+  if (event.key.toLowerCase() === "p" && !event.repeat) {
+    pauseGame();
+  }
+  if (event.key.toLowerCase() === "r" && !event.repeat) {
+    restartGame();
+  }
   if (event.code === "Space") {
     event.preventDefault();
     launchBall();
@@ -89,6 +99,9 @@ document.addEventListener("keydown", function (event) {
 
 document.addEventListener("keyup", function (event) {
   keys[event.key.toLowerCase()] = false;
+  if (event.key.toLowerCase() === "shift") {
+    speedBoost();
+  }
 });
 
 
@@ -104,8 +117,31 @@ function movePaddleRight() {
   paddle.x = paddle.x + paddle.speed;
 }
 
+function speedBoost() {
+  paddle.speed = keys["shift"] ? 12 : 6;
+}
+
+function pauseGame() {
+  GameState.isPaused = !GameState.isPaused;
+}
+
+function restartGame() {
+  GameState.lives = 3;
+  GameState.isGameOver = false;
+  GameState.isPaused = false;
+  ball.x = WIDTH / 2 - ball.width / 2;
+  ball.y = HEIGHT / 2 - ball.height / 2;
+  ball.vx = 0;
+  ball.vy = 0;
+  paddle.x = WIDTH / 2 - paddle.width / 2;
+  paddle.y = HEIGHT - 30;
+  bricks = makeBricks();
+  leftover = 0;
+  lastTime = performance.now();
+}
+
 function update() {
-  if (GameState.isGameOver) {
+  if (GameState.isGameOver || GameState.isPaused) {
     return;
   }
 
@@ -168,6 +204,11 @@ function draw() {
   ctx.font = "16px Arial";
   ctx.fillText("Lives: " + GameState.lives, 10, 30);
   ctx.fillText("Game Over: " + (GameState.isGameOver ? "Yes" : "No"), WIDTH - 150, 30);
+  if (GameState.isPaused) {
+    ctx.textAlign = "center";
+    ctx.fillText("Paused", WIDTH / 2, HEIGHT / 2);
+    ctx.textAlign = "start";
+  }
 }
 
 
