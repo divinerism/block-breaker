@@ -12,6 +12,24 @@ const BRICK_ROW_SHADES = ["#fff176", "#ffee58", "#fdd835", "#fbc02d"];
 
 // Builds the list of bricks. Each brick is an object with an
 // x, y, width, and height.
+function makeBrick(x, y, type = "normal") {
+  const isSpeedBoost = type === "speedboost";
+  const row = Math.floor((y - BRICKS_TOP) / (BRICK_HEIGHT + BRICK_GAP));
+
+  return {
+    x,
+    y,
+    width: BRICK_WIDTH,
+    height: BRICK_HEIGHT,
+    type,
+    collision: isSpeedBoost ? "speedboost" : null,
+    Yellowism: {
+      ...Yellowism,
+      shade: isSpeedBoost ? "#9c27b0" : BRICK_ROW_SHADES[row]
+    }
+  };
+}
+
 function makeBricks() {
   const list = [];
 
@@ -21,13 +39,12 @@ function makeBricks() {
 
   for (let row = 0; row < BRICK_ROWS; row++) {
     for (let col = 0; col < BRICK_COLUMNS; col++) {
-      list.push({
-        x: left + col * (BRICK_WIDTH + BRICK_GAP),
-        y: BRICKS_TOP + row * (BRICK_HEIGHT + BRICK_GAP),
-        width: BRICK_WIDTH,
-        height: BRICK_HEIGHT,
-        Yellowism: { ...Yellowism, shade: BRICK_ROW_SHADES[row] }
-      });
+      const type = row === 1 ? "speedboost" : "normal";
+      list.push(makeBrick(
+        left + col * (BRICK_WIDTH + BRICK_GAP),
+        BRICKS_TOP + row * (BRICK_HEIGHT + BRICK_GAP),
+        type
+      ));
     }
   }
 

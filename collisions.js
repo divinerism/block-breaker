@@ -16,20 +16,43 @@ function boxesTouch(a, b) {
   );
 }
 
+function clearBallSpeedBoost() {
+  if (!ball.speedBoosted) {
+    return;
+  }
+
+  ball.vx = ball.vx / 1.5;
+  ball.vy = ball.vy / 1.5;
+  ball.speedBoosted = false;
+}
+
+function applyBallSpeedBoost() {
+  if (ball.speedBoosted) {
+    return;
+  }
+
+  ball.vx = ball.vx * 1.5;
+  ball.vy = ball.vy * 1.5;
+  ball.speedBoosted = true;
+}
+
 
 // The ball bounces off the left, right, and top walls.
 // (The bottom is not a wall: falling off the bottom resets the ball.)
 function bounceOffWalls() {
   if (ball.x < 0) {
     ball.x = 0;
+    clearBallSpeedBoost();
     ball.vx = -ball.vx;
   }
   if (ball.x + ball.width > WIDTH) {
     ball.x = WIDTH - ball.width;
+    clearBallSpeedBoost();
     ball.vx = -ball.vx;
   }
   if (ball.y < 0) {
     ball.y = 0;
+    clearBallSpeedBoost();
     ball.vy = -ball.vy;
   }
 }
@@ -41,6 +64,7 @@ function bounceOffWalls() {
 function bounceOffPaddle() {
   if (boxesTouch(ball, paddle) && ball.vy > 0) {
     ball.y = paddle.y - ball.height;  // sit on top of the paddle
+    clearBallSpeedBoost();
     ball.vy = -ball.vy;
   }
 }
@@ -52,6 +76,8 @@ function bounceOffBricks() {
     if (!boxesTouch(ball, brick)) {
       continue;  // not touching this brick, check the next one
     }
+
+    clearBallSpeedBoost();
 
     // How far has the ball pushed into the brick on each side?
     const overlapX = Math.min(ball.x + ball.width, brick.x + brick.width) - Math.max(ball.x, brick.x);
@@ -76,6 +102,9 @@ function bounceOffBricks() {
     }
 
     bricks.splice(bricks.indexOf(brick), 1);
+    if (brick.collision === "speedboost") {
+      applyBallSpeedBoost();
+    }
     break;  // bounce off one brick per update, then stop looking
   }
 }

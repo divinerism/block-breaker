@@ -33,7 +33,8 @@ const ball = {
   width: 12,
   height: 12,
   vx: 0,
-  vy: 0
+  vy: 0,
+  speedBoosted: false
 };
 
 // Put the ball in the center and reset its speed and direction.
@@ -42,6 +43,7 @@ function resetBall() {
   ball.y = HEIGHT / 2 - ball.height / 2;
   ball.vx = 0;
   ball.vy = 0;
+  ball.speedBoosted = false;
 }
 
 function launchBall() {
@@ -133,6 +135,7 @@ function restartGame() {
   ball.y = HEIGHT / 2 - ball.height / 2;
   ball.vx = 0;
   ball.vy = 0;
+  ball.speedBoosted = false;
   paddle.x = WIDTH / 2 - paddle.width / 2;
   paddle.y = HEIGHT - 30;
   bricks = makeBricks();
