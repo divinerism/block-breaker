@@ -10,6 +10,15 @@ const BRICK_GAP = 6;     // empty space between bricks
 const BRICKS_TOP = 50;   // how far down the first row starts
 const BRICK_ROW_SHADES = ["#fff176", "#ffee58", "#fdd835", "#fbc02d"];
 
+function stayStill(brick) {}
+
+function slide(brick) {
+  brick.x += brick.speed;
+  if (Math.abs(brick.x - brick.startX) > 30) {
+    brick.speed = -brick.speed;
+  }
+}
+
 // Builds the list of bricks. Each brick is an object with an
 // x, y, width, and height.
 function makeBrick(x, y, type = "normal") {
@@ -22,6 +31,9 @@ function makeBrick(x, y, type = "normal") {
     width: BRICK_WIDTH,
     height: BRICK_HEIGHT,
     type,
+    move: row === 1 ? slide : stayStill,
+    speed: row === 1 ? 3 : 0,
+    startX: x,
     collision: isSpeedBoost ? "speedboost" : null,
     Yellowism: {
       ...Yellowism,

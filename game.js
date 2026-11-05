@@ -148,6 +148,10 @@ function update() {
     return;
   }
 
+  for (const brick of bricks) {
+    brick.move(brick);
+  }
+
   movePaddle();
   moveBall();
 
